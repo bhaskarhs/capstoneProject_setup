@@ -1,20 +1,8 @@
 import mongoose from "mongoose";
 
-const db = async () => {
-  try {
-    const connection = await mongoose.connect(
-      "mongodb://localhost:27017/mydb",
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      }
-    );
-    console.log("MongoDB Connected!");
-    return connection;
-  } catch (error) {
-    console.log(error.message);
-    process.exit(1);
-  }
-};
+const connectToDb = () =>
+  mongoose.connect(
+    `mongodb+srv://${process.env.DBUSERNAME}:${process.env.DBPASSWORD}@cluster0-wgnv8.mongodb.net/test?retryWrites=true&w=majority`
+  );
 
-export default db;
+export default connectToDb;

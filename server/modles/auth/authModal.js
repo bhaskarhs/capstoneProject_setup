@@ -1,37 +1,36 @@
 import { Schema, model } from "mongoose";
+import bcrypt from "bcrypt";
 
-const SignUpSchema = new Schema({
+const userSchema = new Schema({
   email: {
     type: String,
-    require: true,
+    required: true,
+    unique: true,
   },
   password: {
     type: String,
-    require: true,
+    required: true,
   },
-  name: {
-    type: String,
-    require: true,
-  },
-  reEnterPassword: {
-    type: String,
-    require: true,
-  },
-  createdAt: { type: Date, default: Date.now },
-  lastModified: { type: Date, default: Date.now },
+  name: { type: String, require: true },
+  lastmodified: { type: Date, default: Date.now() },
 });
 
-const SignInSchema = new Schema({
-  email: {
-    type: String,
-    require: true,
-  },
-  password: {
-    type: String,
-    require: true,
-  },
-  lastModified: { type: Date, default: Date.now },
+userSchema.pre("save", function (next) {
+  if (this.password && this.isModified("password")) {
+    bcrypt.hash(this.password, 10, (err, hashed) => {
+      if (err) return next(err);
+      this.password = hashed;
+      next();
+    });
+  } else {
+    next();
+  }
 });
 
-export const SignUp = model("SignUp", SignUpSchema);
-export const SingIn = model("SingIn", SignInSchema);
+userSchema.methods.checkPassword = function (password, cd) {
+  bcrypt.compare(password, this.password, (err, result) => {
+    return cb(err, result);
+  });
+};
+
+export const User = model("User", userSchema);
