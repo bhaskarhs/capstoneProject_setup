@@ -26,3 +26,11 @@ const f1 =()=>{
 }
 
 ```
+
+## Pre-requests 
+1.  node version **16.17.0**
+2.  express version **4.18.2**
+3.  mongoose version **8.0.1**
+   
+
+Add you mongoDBURL I am using my localDatabase
